@@ -1,6 +1,8 @@
 import pygame
 import sys
 import tkinter as tk
+import json
+
 
 # Inicializar Pygame
 pygame.init()
@@ -12,12 +14,12 @@ BLACK = (0, 0, 0)
 # Definir tamaño de la pantalla
 root = tk.Tk()
 SCREEN_WIDTH = root.winfo_screenwidth()
-SCREEN_HEIGHT = root.winfo_screenheight()
+SCREEN_HEIGHT = root.winfo_screenheight()-300
 TILE_SIZE = 50
 
 # Configurar la pantalla
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Zelda-like Game")
+pygame.display.set_caption("GAROU The legend")
 
 # Cargar imagen del personaje
 character = pygame.image.load("character.png")
@@ -27,19 +29,25 @@ character_rect.topleft = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 
 # Cargar imágenes de tiles
 grass_tile = pygame.image.load("grass.png")
+grass_tile=pygame.transform.scale(grass_tile, (TILE_SIZE, TILE_SIZE))
+
 wall_tile = pygame.image.load("wall.png")
+wall_tile=pygame.transform.scale(wall_tile, (TILE_SIZE, TILE_SIZE))
+
+floor_tile = pygame.image.load("floor.png")
+floor_tile=pygame.transform.scale(floor_tile, (TILE_SIZE, TILE_SIZE))
 
 # Definir el mapa (0 = grass, 1 = wall)
 game_map = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,2],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,2],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,2],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,2],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,2],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,2],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,2],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,2],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,2]
 ]
 
 # Velocidad del personaje
@@ -55,6 +63,8 @@ def draw_map():
                 screen.blit(grass_tile, (x, y))
             elif game_map[row][col] == 1:
                 screen.blit(wall_tile, (x, y))
+            elif game_map[row][col] == 2:
+                screen.blit(floor_tile, (x, y))
 
 # Bucle principal del juego
 running = True
